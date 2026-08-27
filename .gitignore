@@ -32,6 +32,10 @@ desktop.ini
 # SQLite database files
 *.db
 *.sqlite
+*.db-*
+
+# Scripts
+*.ps1
 
 # Logs
 *.log
