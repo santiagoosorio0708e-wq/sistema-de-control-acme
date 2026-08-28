@@ -4,6 +4,7 @@ import com.acme.sica.acceso.application.ControlAccesoService;
 import com.acme.sica.acceso.application.NotificacionService;
 import com.acme.sica.acceso.domain.model.Visita;
 import com.acme.sica.persona.application.PersonaService;
+import com.acme.sica.persona.domain.model.Persona;
 import com.acme.sica.shared.infrastructure.gui.MainFrame;
 import com.acme.sica.shared.security.SesionActual;
 import com.acme.sica.usuario.domain.model.Usuario;

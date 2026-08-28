@@ -40,7 +40,14 @@ public class ControlAccesoService {
     }
 
     public Visita registrarVisita(Visita visita) {
-        autorizacionService.verificarPermiso("registrar_visita");
+        // Verificar permiso según el tipo de registro
+        if ("APROBADO".equals(visita.getEstado())) {
+            // Pre-registro por funcionario
+            autorizacionService.verificarPermiso("pre_registrar_visita");
+        } else {
+            // Registro por guarda (visitante no anunciado)
+            autorizacionService.verificarPermiso("registrar_visita");
+        }
         
         Persona persona = personaRepository.findById(visita.getPersonaId())
                 .orElseThrow(() -> new EntidadNoEncontradaException("Persona", visita.getPersonaId()));
