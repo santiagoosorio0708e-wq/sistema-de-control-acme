@@ -82,13 +82,22 @@ El sistema implementa una base de datos relacional (SQLite) normalizada. Las tab
 [VISITA] *--1 [EMPRESA]
 ```
 
-## Decisiones de Diseño
+## Decisiones de Diseño y Arquitectura
 
-El SICA fue desarrollado siguiendo una arquitectura hexagonal (Ports and Adapters) y principios SOLID:
+El requerimiento original planteaba el uso de una arquitectura MVC (Model-View-Controller). Sin embargo, con el objetivo de presentar una solución de grado profesional, el SICA fue desarrollado siguiendo **Arquitectura Hexagonal (Ports and Adapters)**. Esta decisión arquitectónica es una evolución moderna del MVC tradicional que aísla completamente la lógica de negocio (Dominio) de las interfaces de usuario (Swing) y de las bases de datos (SQLite), lo cual garantiza un código mucho más robusto, testeable y alineado a los principios SOLID:
+
 - **Single Responsibility Principle (SRP):** Cada clase tiene una responsabilidad única. Por ejemplo, `AutorizacionService` maneja solo validación de roles, mientras `ControlAccesoService` orquesta la lógica de negocio.
 - **Dependency Inversion Principle (DIP):** Los servicios de aplicación dependen de abstracciones (interfaces como `VisitaRepository`) y no de detalles de implementación de base de datos.
-- **Patrón Strategy:** Se utilizó el patrón estrategia (`EstrategiaAcceso`) para desacoplar las reglas de negocio de los distintos flujos (Invitado No Anunciado, Pase Temporal, Salida Olvidada) permitiendo extensión futura sin alterar el servicio principal.
-- **Inyección de Dependencias:** El sistema inyecta servicios como `AuditoriaService` globalmente para garantizar que la trazabilidad transversal ocurra sin acoplar el código de forma dura.
+
+### 5 Patrones de Diseño Implementados
+
+Para resolver los distintos retos técnicos del proyecto, se aplicaron rigurosamente los siguientes 5 patrones de diseño:
+
+1. **Patrón Strategy:** Se utilizó la interfaz `EstrategiaAcceso` para desacoplar las complejas reglas de negocio de los distintos flujos de ingreso (Invitado No Anunciado, Pase Temporal, Salida Olvidada). Esto permite extender las reglas en el futuro sin modificar el `ControlAccesoService` (cumpliendo el Open/Closed Principle).
+2. **Patrón Singleton:** Implementado en `DatabaseConnection.getInstance()` para garantizar una única instancia global de la conexión a la base de datos (SQLite) durante todo el ciclo de vida de la aplicación de escritorio.
+3. **Patrón Repository (DAO):** Aisla la capa de dominio de la persistencia de datos. Interfaces como `VisitaRepository` dictan el contrato, mientras que `VisitaRepositoryImpl` se encarga de la lógica SQL específica, permitiendo un fácil intercambio de bases de datos.
+4. **Dependency Injection (Inyección de Dependencias):** Se evitó instanciar dependencias fuertemente acopladas dentro de los servicios. En su lugar, todos los repositorios y servicios transversales (como `AuditoriaService`) se inyectan a través de los constructores (ej. en `MainFrame.java`).
+5. **Patrón Observer (Event-Driven):** La aplicación implementa un sistema asíncrono de eventos a través de `NotificacionService` (Publisher) y `AccesoEvent`. Esto permite que la interfaz gráfica y otros módulos reaccionen a los cambios de estado (como un check-in) en tiempo real, sin estar fuertemente acoplados.
 
 ---
 
