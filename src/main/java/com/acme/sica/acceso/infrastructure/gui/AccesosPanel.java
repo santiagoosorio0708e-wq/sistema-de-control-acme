@@ -40,18 +40,34 @@ public class AccesosPanel extends JPanel {
 
         // Header and Back Button
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+        headerPanel.setBackground(new Color(255, 255, 255));
+        
         JButton backBtn = new JButton("<- Volver al Dashboard");
+        backBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        backBtn.setBackground(new Color(236, 240, 241));
+        backBtn.setForeground(new Color(44, 62, 80));
+        backBtn.setFocusPainted(false);
+        backBtn.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+        backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backBtn.addActionListener(e -> parentFrame.mostrarPanel("DASHBOARD"));
         headerPanel.add(backBtn);
-        headerPanel.add(new JLabel("  |  Gestión de Accesos"));
+        
+        JLabel titleLabel = new JLabel("  |  Gestión de Accesos");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        titleLabel.setForeground(new Color(44, 62, 80));
+        headerPanel.add(titleLabel);
+        
         add(headerPanel, BorderLayout.NORTH);
 
         // Content
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JPanel contentPanel = new JPanel(new BorderLayout(0, 15));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        contentPanel.setBackground(new Color(245, 247, 250));
 
         // Action Bar (Top of content) - Solo para Guarda / Admin
-        actionBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        actionBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+        actionBar.setBackground(new Color(245, 247, 250));
         
         JButton btnCheckIn = new JButton("Check In Seleccionada");
         btnCheckIn.addActionListener(e -> manejarCheck(true));
@@ -79,12 +95,20 @@ public class AccesosPanel extends JPanel {
             }
         };
         tablaAccesos = new JTable(tablaModelo);
+        tablaAccesos.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tablaAccesos.setRowHeight(30);
+        tablaAccesos.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tablaAccesos.getTableHeader().setBackground(new Color(236, 240, 241));
+
         JScrollPane scrollPane = new JScrollPane(tablaAccesos);
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(220, 224, 229)));
+        scrollPane.getViewport().setBackground(Color.WHITE);
         
         contentPanel.add(scrollPane, BorderLayout.CENTER);
         
         // Approve/Reject Panel (Only for Funcionario)
-        funcActions = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        funcActions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
+        funcActions.setBackground(new Color(245, 247, 250));
         JButton btnAprobar = new JButton("Aprobar Seleccionada");
         btnAprobar.addActionListener(e -> manejarAprobacion(true));
         

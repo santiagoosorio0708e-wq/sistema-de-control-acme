@@ -23,12 +23,15 @@ public class LoginPanel extends JPanel {
         this.authService = authService;
         
         setLayout(new GridBagLayout());
+        setBackground(new Color(245, 247, 250)); // Fondo suave
+
         
         // Crear el panel central estilo "tarjeta"
         JPanel card = new JPanel(new GridBagLayout());
+        card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-                BorderFactory.createEmptyBorder(30, 40, 30, 40)
+                BorderFactory.createLineBorder(new Color(220, 224, 229), 1),
+                BorderFactory.createEmptyBorder(40, 50, 40, 50)
         ));
         
         GridBagConstraints gbc = new GridBagConstraints();
@@ -37,7 +40,8 @@ public class LoginPanel extends JPanel {
         
         // Título
         JLabel title = new JLabel("SICA - Zona Acme");
-        title.setFont(new Font("Arial", Font.BOLD, 24));
+        title.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        title.setForeground(new Color(44, 62, 80));
         title.setHorizontalAlignment(SwingConstants.CENTER);
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -46,6 +50,8 @@ public class LoginPanel extends JPanel {
         
         // Subtítulo
         JLabel subtitle = new JLabel("Inicio de Sesión");
+        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        subtitle.setForeground(new Color(127, 140, 141));
         subtitle.setHorizontalAlignment(SwingConstants.CENTER);
         gbc.gridy = 1;
         card.add(subtitle, gbc);
@@ -53,18 +59,32 @@ public class LoginPanel extends JPanel {
         // Usuario
         gbc.gridwidth = 1;
         gbc.gridy = 2;
-        card.add(new JLabel("Usuario:"), gbc);
+        JLabel userLabel = new JLabel("Usuario:");
+        userLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        card.add(userLabel, gbc);
         
         userField = new JTextField(15);
+        userField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        userField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200)),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
         gbc.gridx = 1;
         card.add(userField, gbc);
         
         // Contraseña
         gbc.gridx = 0;
         gbc.gridy = 3;
-        card.add(new JLabel("Contraseña:"), gbc);
+        JLabel passLabel = new JLabel("Contraseña:");
+        passLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        card.add(passLabel, gbc);
         
         passField = new JPasswordField(15);
+        passField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        passField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200)),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
         gbc.gridx = 1;
         card.add(passField, gbc);
         
@@ -79,32 +99,63 @@ public class LoginPanel extends JPanel {
         
         // Botón Login
         JButton loginButton = new JButton("Ingresar");
-        loginButton.setFont(new Font("Arial", Font.BOLD, 14));
+        loginButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        loginButton.setBackground(new Color(52, 152, 219));
+        loginButton.setForeground(Color.WHITE);
+        loginButton.setFocusPainted(false);
+        loginButton.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+        loginButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         loginButton.addActionListener(this::handleLogin);
         gbc.gridy = 5;
+        gbc.insets = new Insets(20, 10, 10, 10);
         card.add(loginButton, gbc);
         
-        // Cuentas de prueba (Helper)
+        // Cuentas de prueba (Helper) con explicaciones
         JPanel helperPanel = new JPanel();
-        helperPanel.add(new JLabel("Cuentas (User/Pass):"));
-        helperPanel.add(crearBotonAyuda("Admin", "admin", "admin123"));
-        helperPanel.add(crearBotonAyuda("Guarda", "guarda1", "guarda123"));
-        helperPanel.add(crearBotonAyuda("Func.", "funcionario1", "func123"));
+        helperPanel.setLayout(new BoxLayout(helperPanel, BoxLayout.Y_AXIS));
+        helperPanel.setBackground(Color.WHITE);
+        helperPanel.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(new Color(220, 224, 229)),
+            "Cuentas de Prueba (Roles)", 
+            0, 0, new Font("Segoe UI", Font.BOLD, 12), new Color(127, 140, 141)
+        ));
+        
+        helperPanel.add(crearFilaAyuda("Admin", "admin", "admin123", "Tiene acceso a todo el sistema."));
+        helperPanel.add(Box.createVerticalStrut(5));
+        helperPanel.add(crearFilaAyuda("Guarda", "guarda1", "guarda123", "Controla portería (Check-in/out)."));
+        helperPanel.add(Box.createVerticalStrut(5));
+        helperPanel.add(crearFilaAyuda("Func.", "funcionario1", "func123", "Aprueba visitas y pre-registra."));
         
         gbc.gridy = 6;
+        gbc.insets = new Insets(15, 10, 0, 10);
         card.add(helperPanel, gbc);
 
         add(card);
     }
     
-    private JButton crearBotonAyuda(String titulo, String user, String pass) {
+    private JPanel crearFilaAyuda(String titulo, String user, String pass, String desc) {
+        JPanel panel = new JPanel(new BorderLayout(10, 0));
+        panel.setBackground(Color.WHITE);
+        
         JButton btn = new JButton(titulo);
-        btn.setFont(new Font("Arial", Font.PLAIN, 10));
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        btn.setBackground(new Color(236, 240, 241));
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setPreferredSize(new Dimension(80, 25));
         btn.addActionListener(e -> {
             userField.setText(user);
             passField.setText(pass);
         });
-        return btn;
+        
+        JLabel lblDesc = new JLabel(desc);
+        lblDesc.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        lblDesc.setForeground(new Color(100, 100, 100));
+        
+        panel.add(btn, BorderLayout.WEST);
+        panel.add(lblDesc, BorderLayout.CENTER);
+        
+        return panel;
     }
 
     private void handleLogin(ActionEvent e) {

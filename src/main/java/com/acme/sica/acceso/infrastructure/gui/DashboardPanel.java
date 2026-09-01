@@ -41,14 +41,21 @@ public class DashboardPanel extends JPanel {
 
         // Header
         JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        headerPanel.setBackground(new Color(240, 240, 240));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 25));
+        headerPanel.setBackground(new Color(255, 255, 255));
         
         welcomeLabel = new JLabel("Bienvenido");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        welcomeLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        welcomeLabel.setForeground(new Color(44, 62, 80));
         headerPanel.add(welcomeLabel, BorderLayout.WEST);
         
         JButton logoutBtn = new JButton("Cerrar Sesión");
+        logoutBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        logoutBtn.setBackground(new Color(231, 76, 60));
+        logoutBtn.setForeground(Color.WHITE);
+        logoutBtn.setFocusPainted(false);
+        logoutBtn.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+        logoutBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         logoutBtn.addActionListener(e -> {
             SesionActual.cerrarSesion();
             parentFrame.mostrarPanel("LOGIN");
@@ -58,20 +65,35 @@ public class DashboardPanel extends JPanel {
 
         // Main Content (SplitPane para menú lateral y contenido)
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setDividerLocation(200);
+        splitPane.setDividerLocation(220);
+        splitPane.setDividerSize(1);
+        splitPane.setBorder(null);
 
         // Menú Lateral
         JPanel menuPanel = new JPanel();
         menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
-        menuPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
+        menuPanel.setBorder(BorderFactory.createEmptyBorder(20, 15, 20, 15));
+        menuPanel.setBackground(new Color(44, 62, 80));
 
         JButton btnDashboard = new JButton("Dashboard");
+        btnDashboard.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        btnDashboard.setForeground(Color.WHITE);
+        btnDashboard.setBackground(new Color(52, 73, 94));
+        btnDashboard.setFocusPainted(false);
+        btnDashboard.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+        btnDashboard.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnDashboard.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         menuPanel.add(btnDashboard);
         menuPanel.add(Box.createVerticalStrut(10));
         
         JButton btnAccesos = new JButton("Gestión Accesos");
         btnAccesos.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        btnAccesos.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        btnAccesos.setForeground(Color.WHITE);
+        btnAccesos.setBackground(new Color(52, 73, 94));
+        btnAccesos.setFocusPainted(false);
+        btnAccesos.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+        btnAccesos.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnAccesos.addActionListener(e -> parentFrame.mostrarPanel("ACCESOS"));
         menuPanel.add(btnAccesos);
 
@@ -79,7 +101,8 @@ public class DashboardPanel extends JPanel {
 
         // Contenido Dashboard
         JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        contentPanel.setBackground(new Color(245, 247, 250));
 
         // Stats (Top of content)
         JPanel statsPanel = new JPanel(new GridLayout(1, 2, 20, 0));
@@ -95,8 +118,17 @@ public class DashboardPanel extends JPanel {
         // Tabla de últimos accesos
         tablaModelo = new DefaultTableModel(new String[]{"Persona", "Destino", "Estado", "Entrada"}, 0);
         tablaAccesos = new JTable(tablaModelo);
+        tablaAccesos.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tablaAccesos.setRowHeight(30);
+        tablaAccesos.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tablaAccesos.getTableHeader().setBackground(new Color(236, 240, 241));
+        
         JScrollPane scrollPane = new JScrollPane(tablaAccesos);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Últimos Registros"));
+        scrollPane.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createEmptyBorder(20, 0, 0, 0),
+            BorderFactory.createLineBorder(new Color(220, 224, 229))
+        ));
+        scrollPane.getViewport().setBackground(Color.WHITE);
         
         contentPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -107,14 +139,17 @@ public class DashboardPanel extends JPanel {
     private JPanel crearStatPanel(String titulo, JLabel valorLabel) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+            BorderFactory.createLineBorder(new Color(220, 224, 229), 1),
+            BorderFactory.createEmptyBorder(20, 20, 20, 20)
         ));
         panel.setBackground(Color.WHITE);
         
         JLabel tit = new JLabel(titulo);
-        tit.setForeground(Color.GRAY);
-        valorLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        tit.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tit.setForeground(new Color(127, 140, 141));
+        
+        valorLabel.setFont(new Font("Segoe UI", Font.BOLD, 36));
+        valorLabel.setForeground(new Color(44, 62, 80));
         
         panel.add(tit, BorderLayout.NORTH);
         panel.add(valorLabel, BorderLayout.CENTER);
