@@ -7,24 +7,17 @@ import com.acme.sica.acceso.infrastructure.persistence.VisitaRepositoryImpl;
 import com.acme.sica.auditoria.application.AuditoriaService;
 import com.acme.sica.auditoria.domain.port.BitacoraRepository;
 import com.acme.sica.auditoria.infrastructure.persistence.BitacoraRepositoryImpl;
-import com.acme.sica.empresa.application.EmpresaService;
-import com.acme.sica.empresa.domain.port.EmpresaRepository;
-import com.acme.sica.empresa.infrastructure.persistence.EmpresaRepositoryImpl;
 import com.acme.sica.incidente.application.IncidenteService;
 import com.acme.sica.incidente.domain.port.IncidenteRepository;
 import com.acme.sica.incidente.infrastructure.persistence.IncidenteRepositoryImpl;
 import com.acme.sica.persona.application.PersonaService;
 import com.acme.sica.persona.domain.port.PersonaRepository;
 import com.acme.sica.persona.infrastructure.persistence.PersonaRepositoryImpl;
-import com.acme.sica.reporte.application.ReporteService;
 import com.acme.sica.shared.security.AutorizacionService;
 import com.acme.sica.usuario.application.AuthService;
-import com.acme.sica.usuario.application.UsuarioService;
 import com.acme.sica.usuario.domain.port.PermisoRepository;
-import com.acme.sica.usuario.domain.port.RolRepository;
 import com.acme.sica.usuario.domain.port.UsuarioRepository;
 import com.acme.sica.usuario.infrastructure.persistence.PermisoRepositoryImpl;
-import com.acme.sica.usuario.infrastructure.persistence.RolRepositoryImpl;
 import com.acme.sica.usuario.infrastructure.persistence.UsuarioRepositoryImpl;
 
 import com.acme.sica.usuario.infrastructure.gui.LoginPanel;
@@ -44,9 +37,7 @@ public class MainFrame extends JFrame {
     private AuthService authService;
     private ControlAccesoService accesoService;
     private PersonaService personaService;
-    private EmpresaService empresaService;
     private IncidenteService incidenteService;
-    private ReporteService reporteService;
     private NotificacionService notificacionService;
 
     public MainFrame(Connection connection) {
@@ -83,9 +74,7 @@ public class MainFrame extends JFrame {
     private void inicializarServicios(Connection connection) {
         // Repositorios
         UsuarioRepository usuarioRepo = new UsuarioRepositoryImpl(connection);
-        RolRepository rolRepo = new RolRepositoryImpl(connection);
         PermisoRepository permisoRepo = new PermisoRepositoryImpl(connection);
-        EmpresaRepository empresaRepo = new EmpresaRepositoryImpl(connection);
         PersonaRepository personaRepo = new PersonaRepositoryImpl(connection);
         VisitaRepository visitaRepo = new VisitaRepositoryImpl(connection);
         IncidenteRepository incidenteRepo = new IncidenteRepositoryImpl(connection);
@@ -96,15 +85,12 @@ public class MainFrame extends JFrame {
         AuditoriaService auditoriaService = new AuditoriaService(bitacoraRepo, autorizacionService);
         this.authService = new AuthService(usuarioRepo, auditoriaService);
         
-        UsuarioService usuarioService = new UsuarioService(usuarioRepo, autorizacionService, auditoriaService);
-        this.empresaService = new EmpresaService(empresaRepo, autorizacionService, auditoriaService);
         this.personaService = new PersonaService(personaRepo, autorizacionService, auditoriaService);
         
         this.notificacionService = new NotificacionService();
         this.accesoService = new ControlAccesoService(visitaRepo, personaRepo, notificacionService, autorizacionService, auditoriaService);
         
         this.incidenteService = new IncidenteService(incidenteRepo, autorizacionService, auditoriaService);
-        this.reporteService = new ReporteService(visitaRepo, incidenteRepo, autorizacionService);
     }
 
     public void mostrarPanel(String nombrePanel) {

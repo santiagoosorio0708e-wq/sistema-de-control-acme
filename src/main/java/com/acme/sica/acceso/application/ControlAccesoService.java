@@ -66,9 +66,11 @@ public class ControlAccesoService {
         // Registrar nueva visita
         Visita guardada = visitaRepository.save(visita);
         
-        // Determinar estrategia (No Anunciado o Pre-registrado)
+        // Determinar estrategia (Pase Temporal, No Anunciado o Pre-registrado)
         EstrategiaAcceso estrategia;
-        if ("PENDIENTE".equals(visita.getEstado())) {
+        if ("PENDIENTE_OLVIDO".equals(visita.getEstado())) {
+            estrategia = new AccesoPaseTemporalStrategy(notificacionService, auditoriaService);
+        } else if ("PENDIENTE".equals(visita.getEstado())) {
             estrategia = new AccesoNoAnunciadoStrategy(notificacionService, auditoriaService);
         } else {
             estrategia = new AccesoPreRegistradoStrategy(auditoriaService);

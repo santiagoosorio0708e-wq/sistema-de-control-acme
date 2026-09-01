@@ -16,10 +16,8 @@ import java.util.List;
 
 public class AccesosPanel extends JPanel {
 
-    private final MainFrame parentFrame;
     private final ControlAccesoService accesoService;
     private final PersonaService personaService;
-    private final NotificacionService notificacionService;
 
     private DefaultTableModel tablaModelo;
     private JTable tablaAccesos;
@@ -31,10 +29,8 @@ public class AccesosPanel extends JPanel {
                         ControlAccesoService accesoService, 
                         PersonaService personaService,
                         NotificacionService notificacionService) {
-        this.parentFrame = parentFrame;
         this.accesoService = accesoService;
         this.personaService = personaService;
-        this.notificacionService = notificacionService;
 
         setLayout(new BorderLayout());
 
