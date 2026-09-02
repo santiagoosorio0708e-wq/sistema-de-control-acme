@@ -63,24 +63,33 @@ Usa estas credenciales para probar los distintos flujos:
 
 ---
 
-## Modelo de la Base de Datos
+## 🗄️ Modelo y Arquitectura de la Base de Datos
 
-El sistema implementa una base de datos relacional (SQLite) normalizada. Las tablas principales incluyen:
-- **usuarios:** Almacena credenciales y referencias al rol.
-- **roles / permisos:** Conforman el control de acceso basado en roles (RBAC). La tabla intermedia `rol_permisos` vincula ambos.
-- **personas / empresas:** Representan entidades del mundo real interactuando en el complejo.
-- **visitas:** Entidad central que registra los eventos de acceso, estado, hora de check-in y check-out, y referencias al anfitrión (funcionario).
-- **incidentes:** Registro de problemas o reportes asociados a personas.
-- **bitacora_auditoria:** Tabla inmutable donde se almacena todo el historial de cambios, logins y operaciones críticas del sistema.
+El sistema SICA implementa una base de datos relacional altamente estructurada (usando SQLite embebido) que cumple con la tercera forma normal (3FN) para garantizar la integridad referencial y evitar la redundancia de datos.
 
-### Diagrama Entidad-Relación (Conceptual)
-```
-[ROL] 1--* [USUARIO] 1--1 [PERSONA]
-[ROL] 1--* [ROL_PERMISOS] *--1 [PERMISO]
-[EMPRESA] 1--* [PERSONA]
-[PERSONA (Visitante)] 1--* [VISITA] *--1 [PERSONA (Funcionario/Anfitrión)]
-[VISITA] *--1 [EMPRESA]
-```
+### ¿Cómo funciona la base de datos?
+La base de datos funciona a través de 3 pilares clave fuertemente interconectados:
+
+1. **Gestión de Entidades y Control de Acceso Físico (Core del Negocio):**
+   Las `empresas` son las organizaciones dentro del complejo. Cada empresa tiene una o más `personas` asociadas (trabajadores). Las `visitas` conectan a un visitante (persona externa) con su anfitrión (funcionario). Cada visita cambia de estados (PENDIENTE, APROBADO, DENTRO, CERRADA) controlados estrictamente desde el código Java. También, ante cualquier eventualidad, se registran `incidentes` atados tanto a personas como a visitas específicas.
+2. **Seguridad y Control de Acceso Lógico (RBAC):**
+   Se basa en el modelo *Role-Based Access Control*. Los `usuarios` del sistema no tienen permisos directos, sino que tienen un `rol` asignado (Ej: "Admin", "Guarda"). Los permisos específicos están en la tabla `permisos` ("hacer_check_in", "ver_reportes"). La tabla intermedia `rol_permiso` define dinámicamente qué puede hacer cada rol.
+3. **Auditoría Estricta e Inmutable:**
+   La tabla `bitacora_auditoria` funciona como una caja negra. Cada acción importante que los usuarios realizan en el sistema se registra aquí de forma automatizada (Inicios de sesión, check-ins, aprobaciones), apuntando qué usuario lo hizo y en qué fecha/hora exacta.
+
+### Diagramas de Normalización
+
+A continuación, se presentan los esquemas visuales que definen nuestra estructura:
+
+#### 1. Modelo Relacional (Esquema de Tablas - DrawSQL)
+Este diagrama muestra las tablas normalizadas con sus claves primarias (PK) y foráneas (FK), definiendo exactamente las restricciones técnicas.
+
+![Esquema Relacional DrawSQL](img/esquema_cuadros_drawsql.png)
+
+#### 2. Modelo Entidad-Relación (Notación Chen/Rombos - Draw.io)
+Este diagrama ilustra conceptualmente cómo se relacionan las entidades de negocio utilizando la notación clásica para facilitar su entendimiento.
+
+![Esquema Entidad-Relación Draw.io](img/esquema_drawio.png)
 
 ## Decisiones de Diseño y Arquitectura
 
