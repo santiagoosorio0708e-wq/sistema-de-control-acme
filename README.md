@@ -91,6 +91,12 @@ Este diagrama ilustra conceptualmente cómo se relacionan las entidades de negoc
 
 ![Esquema Entidad-Relación Draw.io](img/esquema_drawio.png)
 
+#### 3. Diagrama Entidad-Relación con Notación Chen (Rombos)
+
+Este diagrama representa las entidades del sistema y sus relaciones usando la notación Chen, donde los **rectángulos** son entidades y los **rombos** son las relaciones entre ellas.
+
+![Esquema ER Notación Chen](img/esquema_drawio.png)
+
 ## Decisiones de Diseño y Arquitectura
 
 El requerimiento original planteaba el uso de una arquitectura MVC (Model-View-Controller). Sin embargo, con el objetivo de presentar una solución de grado profesional, el SICA fue desarrollado siguiendo **Arquitectura Hexagonal (Ports and Adapters)**. Esta decisión arquitectónica es una evolución moderna del MVC tradicional que aísla completamente la lógica de negocio (Dominio) de las interfaces de usuario (Swing) y de las bases de datos (SQLite), lo cual garantiza un código mucho más robusto, testeable y alineado a los principios SOLID:
