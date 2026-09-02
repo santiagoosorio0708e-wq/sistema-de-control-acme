@@ -95,7 +95,7 @@ Este diagrama ilustra conceptualmente cómo se relacionan las entidades de negoc
 
 Este diagrama representa las entidades del sistema y sus relaciones usando la notación Chen, donde los **rectángulos** son entidades y los **rombos** son las relaciones entre ellas.
 
-![Esquema ER Notación Chen](img/esquema_drawio.png)
+![Esquema ER Notación Chen](img/esquema_drawio.drawio)
 
 ## Decisiones de Diseño y Arquitectura
 
