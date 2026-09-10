@@ -4,7 +4,6 @@ import com.acme.sica.acceso.application.ControlAccesoService;
 import com.acme.sica.acceso.application.NotificacionService;
 import com.acme.sica.acceso.domain.model.Visita;
 import com.acme.sica.incidente.application.IncidenteService;
-import com.acme.sica.incidente.domain.model.Incidente;
 import com.acme.sica.shared.infrastructure.gui.MainFrame;
 import com.acme.sica.shared.security.SesionActual;
 import com.acme.sica.usuario.domain.model.Usuario;
@@ -16,10 +15,7 @@ import java.util.List;
 
 public class DashboardPanel extends JPanel {
 
-    private final MainFrame parentFrame;
     private final ControlAccesoService accesoService;
-    private final IncidenteService incidenteService;
-    private final NotificacionService notificacionService;
 
     private JLabel welcomeLabel;
     private JLabel statActivasLabel;
@@ -32,10 +28,7 @@ public class DashboardPanel extends JPanel {
                           ControlAccesoService accesoService, 
                           IncidenteService incidenteService,
                           NotificacionService notificacionService) {
-        this.parentFrame = parentFrame;
         this.accesoService = accesoService;
-        this.incidenteService = incidenteService;
-        this.notificacionService = notificacionService;
 
         setLayout(new BorderLayout());
 

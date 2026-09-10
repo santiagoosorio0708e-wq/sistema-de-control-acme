@@ -168,7 +168,7 @@ public class LoginPanel extends JPanel {
         }
         
         try {
-            Usuario user = authService.login(username, password);
+            authService.login(username, password);
             errorLabel.setText(" ");
             passField.setText("");
             

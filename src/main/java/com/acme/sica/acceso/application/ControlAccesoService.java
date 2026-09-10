@@ -8,6 +8,8 @@ import com.acme.sica.auditoria.application.AuditoriaService;
 import com.acme.sica.persona.domain.model.Persona;
 import com.acme.sica.persona.domain.port.PersonaRepository;
 import com.acme.sica.shared.domain.exception.EntidadNoEncontradaException;
+import com.acme.sica.shared.domain.exception.EstadoIlegalException;
+import com.acme.sica.shared.domain.exception.VisitaInvalidaException;
 import com.acme.sica.shared.security.AutorizacionService;
 
 import java.time.LocalDateTime;
@@ -53,7 +55,7 @@ public class ControlAccesoService {
                 .orElseThrow(() -> new EntidadNoEncontradaException("Persona", visita.getPersonaId()));
         
         if (!"ACTIVO".equals(persona.getEstadoAcceso())) {
-            throw new RuntimeException("La persona tiene acceso " + persona.getEstadoAcceso());
+            throw new EstadoIlegalException("La persona tiene acceso " + persona.getEstadoAcceso());
         }
 
         // Revisar si ya tiene una visita abierta (Salida Olvidada)
@@ -66,9 +68,11 @@ public class ControlAccesoService {
         // Registrar nueva visita
         Visita guardada = visitaRepository.save(visita);
         
-        // Determinar estrategia (No Anunciado o Pre-registrado)
+        // Determinar estrategia (Pase Temporal, No Anunciado o Pre-registrado)
         EstrategiaAcceso estrategia;
-        if ("PENDIENTE".equals(visita.getEstado())) {
+        if ("PENDIENTE_OLVIDO".equals(visita.getEstado())) {
+            estrategia = new AccesoPaseTemporalStrategy(notificacionService, auditoriaService);
+        } else if ("PENDIENTE".equals(visita.getEstado())) {
             estrategia = new AccesoNoAnunciadoStrategy(notificacionService, auditoriaService);
         } else {
             estrategia = new AccesoPreRegistradoStrategy(auditoriaService);
@@ -85,7 +89,7 @@ public class ControlAccesoService {
                 .orElseThrow(() -> new EntidadNoEncontradaException("Visita", visitaId));
         
         if (!"APROBADO".equals(visita.getEstado())) {
-            throw new RuntimeException("Solo se puede hacer check-in a visitas APROBADAS.");
+            throw new EstadoIlegalException("Solo se puede hacer check-in a visitas APROBADAS.");
         }
         
         String ahora = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -106,7 +110,7 @@ public class ControlAccesoService {
         autorizacionService.verificarPermiso("check_out");
         
         Visita visita = visitaRepository.findVisitaAbierta(personaId)
-                .orElseThrow(() -> new RuntimeException("La persona no tiene un ingreso registrado activo."));
+                .orElseThrow(() -> new VisitaInvalidaException("La persona no tiene un ingreso registrado activo."));
         
         String ahora = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         visitaRepository.registrarSalida(visita.getId(), ahora);
@@ -129,7 +133,7 @@ public class ControlAccesoService {
                 .orElseThrow(() -> new EntidadNoEncontradaException("Visita", visitaId));
         
         if (!"DENTRO".equals(visita.getEstado())) {
-            throw new RuntimeException("La visita no está en estado DENTRO.");
+            throw new EstadoIlegalException("La visita no está en estado DENTRO.");
         }
         
         String ahora = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
